@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Dimension clients (SCD2)"
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+  - name: dim_products
+    description: "Dimension produits"
+  - name: dim_time
+    description: "Dimension temps"
+  - name: fct_orders
+    description: "Fait commandes"

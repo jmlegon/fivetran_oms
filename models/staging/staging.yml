@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: salesforce
+    schema: OMS_FIVETRAN_SALESFORCE
+    tables:
+      - name: MY_CUSTOMER_C
+
+  - name: postgres
+    schema: OMS_FIVETRAN_POSTGRES_PUBLIC
+    tables:
+      - name: ORDERS_FACT
+      - name: PRODUCT_DIM
+      - name: TIME_DIM

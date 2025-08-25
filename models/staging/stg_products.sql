@@ -28,7 +28,7 @@ select
     sc.category_id   as category_id,     -- clé étrangère vers category
     c.category_desc  as category_name,         -- libellé catégorie (via LU_CATEGORY)
     p.brand_id,
-    b.brand_name     as brand_name,            -- libellé marque
+    b.brand_desc     as brand_name,            -- libellé marque
     p.supplier_id,
     s.supplier_name  as supplier_name     -- libellé fournisseur
 from product_src p

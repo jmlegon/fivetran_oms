@@ -1,1 +1,1 @@
-select * from {{ source('postgres','PRODUCT_DIM') }}
+select * from {{ source('postgres_public','PRODUCT_DIM') }}

@@ -10,13 +10,15 @@ select
     d.UNIT_PRICE,
     d.UNIT_COST,
     d.DISCOUNT,
-    t.DATE as order_date,
+    t.TIME_ID,
     h.CUSTOMER_ID::int as CUSTOMER_ID,
     p.product_key
 from {{ source('postgres_public','ORDER_DETAIL') }} d
 join {{ source('postgres_public','ORDER_HEADER') }} h 
     on d.ORDER_ID = h.ORDER_ID
-join {{ ref('dim_time') }} t 
+left join {{ ref('dim_time') }} t 
     on cast(h.ORDER_DATE as date) = t.date
-join {{ ref('dim_products') }} p
+left join {{ ref('dim_products') }} p
     on d.ITEM_ID = p.product_id
+left join {{ ref('dim_customers') }} c
+    on h.CUSTOMER_ID = c.customer_id

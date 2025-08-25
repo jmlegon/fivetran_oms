@@ -16,6 +16,7 @@ with date_spine as (
 
 dim_time as (
     select
+        row_number() over (order by date_day) as TIME_ID,  -- ✅ ID unique pour la dimension
         date_day as date,
         extract(year from date_day)::int as year,
         extract(month from date_day)::int as month,

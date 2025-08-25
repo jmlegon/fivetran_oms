@@ -18,5 +18,5 @@ join {{ source('postgres_public','ORDER_HEADER') }} h
     on d.ORDER_ID = h.ORDER_ID
 join {{ ref('dim_time') }} t 
     on cast(h.ORDER_DATE as date) = t.date
-join {{ ref('products') }} p
+join {{ ref('dim_products') }} p
     on d.ITEM_ID = p.product_id

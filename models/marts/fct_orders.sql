@@ -12,7 +12,8 @@ select
     d.DISCOUNT,
     t.TIME_ID,
     h.CUSTOMER_ID::int as CUSTOMER_ID,
-    p.product_key
+    p.product_key,
+    c.customer_key as customer_key_dim  -- <-- utiliser le bon nom ici
 from {{ source('postgres_public','ORDER_DETAIL') }} d
 join {{ source('postgres_public','ORDER_HEADER') }} h 
     on d.ORDER_ID = h.ORDER_ID
@@ -21,4 +22,4 @@ left join {{ ref('dim_time') }} t
 left join {{ ref('dim_products') }} p
     on d.ITEM_ID = p.product_id
 left join {{ ref('dim_customers') }} c
-    on h.CUSTOMER_ID = c.customer_id
+    on h.CUSTOMER_ID = c.customer_id_source  -- <-- match sur la colonne correcte

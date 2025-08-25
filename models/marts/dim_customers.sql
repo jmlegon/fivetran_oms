@@ -20,7 +20,7 @@ with ranked as (
             partition by CUSTOMER_ID
             order by _FIVETRAN_SYNCED
         ) as version_num
-    from {{ ref('stgustomers') }}
+    from {{ ref('stg_customers') }}
 )
 
 select

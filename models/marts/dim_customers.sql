@@ -1,3 +1,9 @@
+{{ config(
+    materialized='table',
+    schema='STAR_SCHEMA',
+    sort='customer_key'
+) }}
+
 with ranked as (
     select
         CUSTOMER_ID_C as customer_id_source,
@@ -16,6 +22,7 @@ with ranked as (
         ) as version_num
     from {{ ref('stg_customers') }}
 )
+
 select
     {{ dbt_utils.generate_surrogate_key(['customer_id_source','version_num']) }} as customer_key,
     customer_id_source,

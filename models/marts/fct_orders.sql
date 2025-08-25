@@ -13,8 +13,8 @@ select
     t.DATE as order_date,
     h.CUSTOMER_ID::int as CUSTOMER_ID,
     p.product_key
-from {{ source('oms','ORDER_DETAIL') }} d
-join {{ source('oms','ORDER_HEADER') }} h 
+from {{ source('postgres_public','ORDER_DETAIL') }} d
+join {{ source('postgres_public','ORDER_HEADER') }} h 
     on d.ORDER_ID = h.ORDER_ID
 join {{ ref('dim_time') }} t 
     on cast(h.ORDER_DATE as date) = t.date

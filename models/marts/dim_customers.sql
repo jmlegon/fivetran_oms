@@ -7,18 +7,18 @@
 with ranked as (
     select
         CUSTOMER_ID as customer_id_source,
-        CUST_LAST_NAME,
-        CUST_FIRST_NAME,
+        LAST_NAME,
+        FIRST_NAME,
         GENDER,
         EMAIL,
         ADDRESS,
         ZIPCODE,
         CITY,
-        CUST_BIRTHDATE,
-        _FIVETRAN_SYNCED,
+        BIRTHDATE,
+        SYNCED_AT,
         row_number() over (
             partition by CUSTOMER_ID
-            order by _FIVETRAN_SYNCED
+            order by SYNCED_AT
         ) as version_num
     from {{ ref('stg_customers') }}
 )

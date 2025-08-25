@@ -24,14 +24,18 @@ select
     p.unit_price,
     p.unit_cost,
     p.subcat_id,
-    coalesce(sub.subcat_name, null)    as sub_category,
+    sc.subcat_desc   as sub_category,    -- libellé sous-catégorie (via LU_SUBCATEG)
+    sc.category_id   as category_id,     -- clé étrangère vers category
+    c.category_name  as category,         -- libellé catégorie (via LU_CATEGORY)
     p.brand_id,
-    coalesce(b.brand_name, null)       as brand,
+    b.brand_name     as brand,            -- libellé marque
     p.supplier_id,
-    coalesce(s.supplier_name, null)    as supplier_name
+    s.supplier_name  as supplier_name     -- libellé fournisseur
 from product_src p
-left join {{ source('postgres_public', 'LU_SUBCATEGORY') }} sub
-    on p.subcat_id = sub.subcat_id
+left join {{ source('postgres_public', 'LU_SUBCATEG') }} sc
+    on p.subcat_id = sc.subcat_id
+left join {{ source('postgres_public', 'LU_CATEGORY') }} c
+    on sc.category_id = c.category_id
 left join {{ source('postgres_public', 'LU_BRAND') }} b
     on p.brand_id = b.brand_id
 left join {{ source('postgres_public', 'LU_SUPPLIER') }} s

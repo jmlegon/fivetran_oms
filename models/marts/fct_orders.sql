@@ -18,7 +18,7 @@ from {{ source('postgres_public','ORDER_DETAIL') }} d
 join {{ source('postgres_public','ORDER_HEADER') }} h 
     on d.ORDER_ID = h.ORDER_ID
 left join {{ ref('dim_time') }} t 
-    on cast(h.ORDER_DATE as date) = t.date
+    on cast(h.ORDER_DATE as date) = cast(t.date as date)
 left join {{ ref('dim_products') }} p
     on d.ITEM_ID = p.product_id
 left join {{ ref('dim_customers') }} c

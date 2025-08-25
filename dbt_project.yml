@@ -8,14 +8,23 @@ model-paths: ["models"]
 target-path: "target"
 clean-targets: ["target", "dbt_modules"]
 
+name: 'fivetran_oms'
+version: '1.0.0'
+config-version: 2
+
+profile: 'fivetran_oms'
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets: ["target", "dbt_modules"]
+
 models:
   fivetran_oms:
+
     staging:
       +schema: STAGING
-      +alias: "{{ model.name }}"  # empêche dbt de préfixer
       +materialized: view
+
     marts:
       +schema: STAR_SCHEMA
-      +alias: "{{ model.name }}"  # empêche dbt de préfixer
       +materialized: table
-

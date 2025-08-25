@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: salesforce
+    database: OMS_FIVETRAN
+    schema: SALESFORCE
+    tables:
+      - name: MY_CUSTOMER_C
+
+  - name: postgres_public
+    database: OMS_FIVETRAN
+    schema: POSTGRES_PUBLIC
+    tables:
+      - name: CUSTOMER
+      - name: ORDER_HEADER
+      - name: ORDER_DETAIL
+      - name: PRODUCT
+      - name: LU_BRAND
+      - name: LU_CATEGORY
+      - name: LU_SUBCATEG
+      - name: LU_SUPPLIER

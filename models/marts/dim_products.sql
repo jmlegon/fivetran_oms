@@ -9,7 +9,7 @@ select
     product_id::int                as product_id,
     product_name,
     sub_category,
-    brand,
+    brand_name,
     supplier_id::int                as supplier_id,
     supplier_name,
     unit_price,

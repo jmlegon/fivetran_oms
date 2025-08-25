@@ -12,7 +12,10 @@ models:
   fivetran_oms:
     staging:
       +schema: STAGING
+      +alias: "{{ model.name }}"  # empêche dbt de préfixer
       +materialized: view
     marts:
       +schema: STAR_SCHEMA
+      +alias: "{{ model.name }}"  # empêche dbt de préfixer
       +materialized: table
+

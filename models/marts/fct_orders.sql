@@ -22,4 +22,5 @@ left join {{ ref('dim_time') }} t
 left join {{ ref('dim_products') }} p
     on d.ITEM_ID = p.product_id
 left join {{ ref('dim_customers') }} c
-    on h.CUSTOMER_ID = c.customer_id_source  -- <-- match sur la colonne correcte
+    on h.CUSTOMER_ID = c.customer_id_source 
+     and c.IS_CURRENT = TRUE 

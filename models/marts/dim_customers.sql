@@ -6,8 +6,7 @@
 
 with source as (
     select
-        id as customer_sk,
-        customer_id,
+        customer_id,       -- clé métier
         last_name,
         first_name,
         gender,
@@ -19,18 +18,20 @@ with source as (
         synced_at,
         is_deleted
     from {{ ref('stg_customers') }}
-),
+)
 
-current_dim as (
+{% if is_incremental() %}
+
+, current_dim as (
     select *
     from {{ this }}
     where is_current = true
 )
 
--- Cas 1 : nouveaux enregistrements ou modifications
+-- Incrémental : on insère les nouvelles versions si changement
 select
     {{ dbt_utils.generate_surrogate_key(['s.customer_id','s.synced_at']) }} as customer_key,
-    s.customer_id,
+    s.customer_id as customer_id_source,
     s.last_name,
     s.first_name,
     s.gender,
@@ -44,8 +45,8 @@ select
     true as is_current
 from source s
 left join current_dim d
-    on s.customer_id = d.customer_id
-where d.customer_id is null  -- nouveau client
+    on s.customer_id = d.customer_id_source
+where d.customer_id_source is null  -- nouveau client
    or (
         d.is_current
         and (
@@ -63,10 +64,10 @@ where d.customer_id is null  -- nouveau client
 
 union all
 
--- Cas 2 : anciennes versions qu’on conserve et qu’on clôture si nécessaire
+-- Anciennes versions conservées / clôturées
 select
     d.customer_key,
-    d.customer_id,
+    d.customer_id_source,
     d.last_name,
     d.first_name,
     d.gender,
@@ -80,7 +81,7 @@ select
         when s.is_deleted = true
         then coalesce(d.effective_to, current_timestamp)
         when (
-            s.customer_id = d.customer_id
+            s.customer_id = d.customer_id_source
             and (
                 s.last_name  <> d.last_name
              or s.first_name <> d.first_name
@@ -98,7 +99,7 @@ select
     case 
         when s.is_deleted = true then false
         when (
-            s.customer_id = d.customer_id
+            s.customer_id = d.customer_id_source
             and (
                 s.last_name  <> d.last_name
              or s.first_name <> d.first_name
@@ -115,4 +116,26 @@ select
     end as is_current
 from current_dim d
 left join source s
-    on s.customer_id = d.customer_id
+    on s.customer_id = d.customer_id_source
+
+{% else %}
+
+-- Full refresh : état initial
+select
+    {{ dbt_utils.generate_surrogate_key(['s.customer_id','s.synced_at']) }} as customer_key,
+    s.customer_id as customer_id_source,
+    s.last_name,
+    s.first_name,
+    s.gender,
+    s.email,
+    s.address,
+    s.zipcode,
+    s.city,
+    s.birthdate,
+    s.synced_at as effective_from,
+    null as effective_to,
+    true as is_current
+from source s
+where s.is_deleted = false
+
+{% endif %}
